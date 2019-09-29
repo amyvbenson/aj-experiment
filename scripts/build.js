@@ -29,6 +29,7 @@ fs.mkdir('dist', { recursive: true }, (err) => {
     })
 
     copydir.sync('src/template/tool.html', 'dist/tool.html')
+    copydir.sync('src/template/admin.html', 'dist/admin.html')
     });
 });
 

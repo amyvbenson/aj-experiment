@@ -1,4 +1,4 @@
-import { store, getCategories } from './dataHandler.js';
+import { store, getCategories } from '../dataHandler.js';
 
 const renderCategories = (categories) => {
   return `

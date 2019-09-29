@@ -1,5 +1,8 @@
-import indexPage from './js/indexPage.js';
-import toolPage from './js/toolPage.js';
+import indexPage from './js/pages/indexPage.js';
+import toolPage from './js/pages/toolPage.js';
+import adminPage from './js/pages/admin/adminPage.js';
+import { registerAdminPageElements } from './js/pages/admin/admin';
+import { checkAuthentication } from './js/authService';
 
 const pageElement = document.querySelector('#jsPage');
 
@@ -10,14 +13,15 @@ const handleLinks = () => {
   for (let i = 0; i < linkElements.length; i++) {
     linkElements[i].onclick = (event) => {
       event.preventDefault();
-      const linkTarget = linkElements[i].dataset.jsPage;
+      const linkTarget = linkElements[i].getAttribute('data-js-page');
       renderPage(linkTarget, true);
     }
   }
 }
 
+
 const renderPage = (page, updateUrl) => {
-  // consosle.log('khkjhk')
+  checkAuthentication();
   if (page === 'tool') {
     pageElement.innerHTML = toolPage();
     if (updateUrl) {
@@ -27,19 +31,24 @@ const renderPage = (page, updateUrl) => {
     handleLinks();
     return;
   }
+  if (page === 'admin') {
+    pageElement.innerHTML = adminPage();
+    if (updateUrl) {
+      history.pushState({}, 'admin', 'admin.html')
+      document.title = 'admin';
+    }
+    handleLinks();
+    registerAdminPageElements();
+    return;
+  }
+
 
   //default page
   pageElement.innerHTML = indexPage();
-
-  // insert elements shared with html page
-  // const header = window.ajShared.header();
-  // pageElement.insertAdjacentHTML('afterbegin', header);
-
   history.pushState({}, 'home', 'index.html')
   document.title = 'home';
 
   handleLinks();
-  
 }
 
 
@@ -57,6 +66,10 @@ const handlePageLoad = () => {
   // will need to handle query strings
   if (path === '/tool.html') {
     renderPage('tool');
+    return;
+  }
+  if (path === '/admin.html') {
+    renderPage('admin');
     return;
   }
 
